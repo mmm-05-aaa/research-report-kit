@@ -1,0 +1,15 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "research-report-kit"
+version = "0.1.0"
+description = "A local-first CSV quality summary tool for reproducible research reports."
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "MIT" }
+authors = [{ name = "Research Report Kit contributors" }]
+
+[project.scripts]
+reportkit = "reportkit.cli:main"
