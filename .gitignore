@@ -2,4 +2,9 @@ __pycache__/
 *.py[cod]
 .venv/
 report/
+demo-report/
 test-output/
+dist/
+build/
+*.egg-info/
+.hermes/

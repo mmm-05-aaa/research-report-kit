@@ -4,12 +4,13 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "research-report-kit"
-version = "0.1.0"
-description = "A local-first CSV quality summary tool for reproducible research reports."
+version = "0.2.0"
+description = "A standalone local-first CSV quality inspector with JSON, Markdown and HTML reports."
 readme = "README.md"
 requires-python = ">=3.10"
-license = { text = "MIT" }
+license = "MIT"
 authors = [{ name = "Research Report Kit contributors" }]
 
 [project.scripts]
 reportkit = "reportkit.cli:main"
+reportkit-gui = "reportkit.gui:main"

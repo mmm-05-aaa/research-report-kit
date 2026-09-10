@@ -1,5 +1,9 @@
-sample,group,score,notes
-A01,control,1.5,baseline
-A02,control,2.0,
-A03,treatment,3.25,follow-up
-A04,treatment,4.0,follow-up
+order_id,channel,amount,status,notes
+A-1001,online,129.50,completed,first purchase
+A-1002,store,89.00,completed,
+A-1003,online,210.00,pending,manual review
+A-1004,partner,,completed,missing amount
+A-1005,online,158.25,completed,returning customer
+A-1005,online,158.25,completed,returning customer
+A-1006,store,75.00,cancelled,customer request
+A-1007,online,NaN,pending,invalid numeric value

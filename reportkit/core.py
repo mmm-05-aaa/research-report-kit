@@ -1,7 +1,18 @@
 import csv
+import hashlib
+import io
 import json
+import math
 import statistics
 from pathlib import Path
+
+from .reporting import write_report_bundle
+
+MISSING_MARKERS = {"", "na", "n/a", "nan", "null", "none"}
+
+
+def _missing(value: str) -> bool:
+    return value.strip().lower() in MISSING_MARKERS
 
 
 def _read_text(path: Path) -> tuple[str, str]:
@@ -28,6 +39,8 @@ def _number(value: str) -> float | int | None:
         number = float(value)
     except ValueError:
         return None
+    if not math.isfinite(number):
+        return None
     return int(number) if number.is_integer() else number
 
 
@@ -37,7 +50,10 @@ def summarize_csv(source: str | Path) -> dict:
         raise FileNotFoundError(f"CSV file not found: {path}")
     text, encoding = _read_text(path)
     dialect = _dialect(text)
-    rows = list(csv.reader(text.splitlines(), dialect))
+    try:
+        rows = list(csv.reader(io.StringIO(text, newline=""), dialect, strict=True))
+    except csv.Error as exc:
+        raise ValueError(f"Malformed CSV: {exc}") from exc
     rows = [row for row in rows if any(cell.strip() for cell in row)]
     if not rows:
         raise ValueError("CSV is empty")
@@ -46,13 +62,13 @@ def summarize_csv(source: str | Path) -> dict:
     width = len(header)
     body = [row + [""] * (width - len(row)) for row in rows[1:]]
     irregular_rows = sum(1 for row in rows[1:] if len(row) != width)
-    missing_by_column = [sum(not row[index].strip() for row in body) for index in range(width)]
+    missing_by_column = [sum(_missing(row[index]) for row in body) for index in range(width)]
     duplicate_rows = len(body) - len({tuple(row) for row in body})
 
     columns = []
     for index, name in enumerate(header):
         values = [row[index] for row in body]
-        non_empty = [value for value in values if value.strip()]
+        non_empty = [value for value in values if not _missing(value)]
         numbers = [number for number in (_number(value) for value in non_empty) if number is not None]
         numeric = bool(non_empty) and len(numbers) == len(non_empty)
         column = {
@@ -70,8 +86,18 @@ def summarize_csv(source: str | Path) -> dict:
             }
         columns.append(column)
 
+    issues = []
+    if len(set(header)) != len(header):
+        issues.append("duplicate_header_labels")
+    if any(not name.strip() for name in header):
+        issues.append("empty_header_labels")
+    if irregular_rows:
+        issues.append("irregular_row_widths")
+
     return {
         "source": path.name,
+        "source_name": path.name,
+        "source_sha256": hashlib.sha256(path.read_bytes()).hexdigest(),
         "encoding": encoding,
         "delimiter": dialect.delimiter,
         "rows": len(body),
@@ -79,6 +105,7 @@ def summarize_csv(source: str | Path) -> dict:
         "missing_values": sum(missing_by_column),
         "duplicate_rows": duplicate_rows,
         "irregular_rows": irregular_rows,
+        "issues": issues,
         "column_summary": columns,
     }
 
