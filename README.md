@@ -103,10 +103,6 @@ tests/                  behavior and regression tests
 examples/               synthetic demonstration data
 ```
 
-## Screenshots
-
-Screenshots will be added after the native interface and generated HTML report are reviewed on Windows. No private or customer data should appear in repository images.
-
 ## License
 
 MIT © 2026 mmm-05-aaa
