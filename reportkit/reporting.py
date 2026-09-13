@@ -21,7 +21,7 @@ def _markdown(summary: dict) -> str:
         f"- Missing values: **{summary['missing_values']}**",
         f"- Duplicate rows: **{summary['duplicate_rows']}**",
         f"- Irregular rows: **{summary['irregular_rows']}**",
-        f"- Source SHA-256: `{summary['source_sha256']}`",
+
         "",
         "## Structural checks",
         "",
@@ -102,7 +102,7 @@ table{{border-collapse:collapse;width:100%}} th,td{{border-bottom:1px solid var(
 <body><main>
 <header><div><div class="eyebrow">Local · Read-only · Reproducible</div><h1>Data quality overview</h1><div class="source">{_display(summary.get('source_name', Path(str(summary['source'])).name))} · {_display(summary['encoding'])} · delimiter {_display(repr(summary['delimiter']))}</div></div></header>
 <section class="grid">{cards_html}</section>
-<section class="panel issues"><h2>Structural checks</h2><ul>{issues_html}</ul><small>Source SHA-256: {_display(summary['source_sha256'])}</small></section>
+<section class="panel issues"><h2>Structural checks</h2><ul>{issues_html}</ul></section>
 <section class="panel"><h2>Column profile</h2><table><thead><tr><th>Column</th><th>Detected type</th><th>Missing</th><th>Missing rate</th></tr></thead><tbody>{''.join(rows)}</tbody></table></section>
 <div class="notice"><strong>Interpretation boundary</strong><br>This report describes structural data-quality signals. It does not modify the source file or infer business or scientific conclusions.</div>
 </main></body></html>
