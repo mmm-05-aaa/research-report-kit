@@ -1,5 +1,4 @@
 import csv
-import hashlib
 import io
 import json
 import math
@@ -97,7 +96,7 @@ def summarize_csv(source: str | Path) -> dict:
     return {
         "source": path.name,
         "source_name": path.name,
-        "source_sha256": hashlib.sha256(path.read_bytes()).hexdigest(),
+
         "encoding": encoding,
         "delimiter": dialect.delimiter,
         "rows": len(body),

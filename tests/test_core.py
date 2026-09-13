@@ -71,12 +71,12 @@ class SummaryTests(unittest.TestCase):
             self.assertIn("&lt;script&gt;", html)
             self.assertNotIn("<script>", html)
 
-    def test_summary_has_source_hash_and_structural_issues(self):
+    def test_summary_reports_structural_issues(self):
         with tempfile.TemporaryDirectory() as directory:
             source = Path(directory) / "data.csv"
             source.write_text("id,id,\n1,2\n3,4,5,6\n", encoding="utf-8")
             summary = summarize_csv(source)
-            self.assertEqual(len(summary["source_sha256"]), 64)
+            self.assertEqual(summary["source_name"], "data.csv")
             self.assertEqual(
                 summary["issues"],
                 ["duplicate_header_labels", "empty_header_labels", "irregular_row_widths"],

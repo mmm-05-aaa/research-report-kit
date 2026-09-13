@@ -16,7 +16,7 @@ It is part of a local productivity-tool portfolio, but it remains independent fr
 - numeric minimum, maximum, mean and median
 - non-finite values such as `NaN` and `Inf`
 
-Every run records the source file's SHA-256 and writes three local reports:
+Every run writes three local reports:
 
 ```text
 summary.json   machine-readable results
